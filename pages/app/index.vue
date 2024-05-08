@@ -1,0 +1,36 @@
+<template>
+  <div>
+    <!-- <h2>Product Detail Vuejs</h2> -->
+    <div class="grid grid-cols-4 gap-5">
+      <div v-for="p in products">
+        <NuxtLink :to="`/products/${p.id}`">{{
+          p.title
+        }}</NuxtLink>
+      </div>
+    </div>
+  </div>
+  <!-- <router-link to="/"
+    >Go to Home Page</router-link
+  >
+  <router-link to="/about"
+    >Go to About Page</router-link
+  > -->
+</template>
+<script setup>
+definePageMeta({ layout: "products" });
+
+const { data: products } = await useFetch(
+  "https://fakestoreapi.com/products"
+);
+</script>
+<style scoped>
+h2 {
+  font-size: 20px;
+  color: green;
+}
+</style>
+<!-- class="rotate-infinite rounded-full m-auto w-40 h-40 items-center" -->
+<!-- :class="[
+'rounded-full m-auto w-40 h-40 items-center',
+{ 'rotate-infinite': isRotating },
+]" -->
