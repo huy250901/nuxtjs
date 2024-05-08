@@ -29,8 +29,3 @@ h2 {
   color: green;
 }
 </style>
-<!-- class="rotate-infinite rounded-full m-auto w-40 h-40 items-center" -->
-<!-- :class="[
-'rounded-full m-auto w-40 h-40 items-center',
-{ 'rotate-infinite': isRotating },
-]" -->

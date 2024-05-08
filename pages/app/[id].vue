@@ -1,19 +1,33 @@
 <template>
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet"
+  />
+
   <div
     class="flex justify-center items-center h-screen"
   >
     <div
-      class="bg-emerald-500 h-full w-1/3 flex justify-center items-center flex-col"
+      class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-full w-1/3 flex justify-center items-center flex-col"
     >
-      <div class="h-full w-full border-2 px-4">
+      <div class="h-3/4 w-full border-2 px-4">
         <h2
-          class="text-center text-blue-700 font-bold mb-4"
+          class="text-center font-fm text-blue-700 font-bold mt-4 mb-4"
         >
           Now Playing
         </h2>
 
         <h3
-          class="text-center text-blue-700 font-bold mb-4"
+          class="text-center font-fm text-blue-700 font-bold mb-4"
         >
           {{
             currentSong
@@ -26,35 +40,35 @@
             id="img"
             class="rotate-infinite rounded-full m-auto w-40 h-40 items-center"
             :src="currentSongImage"
+            :class="{ rotate: isPlaying }"
           />
         </div>
         <div
-          class="flex relative justify-center space-x-5 mt-6 items-center"
+          class="flex justify-between mt-6 items-center"
         >
-          <div v-if="hover">
-            <input
-              class="absolute top-0 -rotate-90"
-              type="range"
-              min="0"
-              max="100"
-            />
-          </div>
           <div
-            @mouseover="hover = true"
-            @mouseleave="hover = false"
-            class="flex flex-col justify-center cursor-pointer"
+            class="relative cursor-pointer"
+            id="volumeControlWrapper"
           >
             <svg
-              width="1rem"
-              height="1rem"
-              viewBox="0 0 24 24"
+              width="1.4rem"
+              height="1.4rem"
+              fill="#fff"
               class="p-2 rounded-full text-white w-10 h-10"
+              viewBox="0 0 640 512"
             >
               <path
-                fill="currentColor"
-                d="M15.35 20.3q-.5.2-.925-.125q-.425-.325-.425-.9q0-.275.163-.487q.162-.213.412-.313q2-.8 3.213-2.55Q19 14.175 19 11.975t-1.212-3.95q-1.213-1.75-3.213-2.55q-.275-.1-.425-.325q-.15-.225-.15-.5q0-.55.425-.875q.425-.325.925-.125q2.55 1.025 4.1 3.275Q21 9.175 21 11.975t-1.55 5.05q-1.55 2.25-4.1 3.275ZM4 15q-.425 0-.712-.288Q3 14.425 3 14v-4q0-.425.288-.713Q3.575 9 4 9h3l3.3-3.3q.475-.475 1.087-.213q.613.263.613.938v11.15q0 .675-.613.937q-.612.263-1.087-.212L7 15Zm10 1V7.95q1.125.525 1.812 1.625q.688 1.1.688 2.425q0 1.325-.688 2.4Q15.125 15.475 14 16Z"
-              ></path>
+                d="M533.6 32.5C598.5 85.2 640 165.8 640 256s-41.5 170.7-106.4 223.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C557.5 398.2 592 331.2 592 256s-34.5-142.2-88.7-186.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM473.1 107c43.2 35.2 70.9 88.9 70.9 149s-27.7 113.8-70.9 149c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C475.3 341.3 496 301.1 496 256s-20.7-85.3-53.2-111.8c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zm-60.5 74.5C434.1 199.1 448 225.9 448 256s-13.9 56.9-35.4 74.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C393.1 284.4 400 271 400 256s-6.9-28.4-17.7-37.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM301.1 34.8C312.6 40 320 51.4 320 64V448c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352H64c-35.3 0-64-28.7-64-64V224c0-35.3 28.7-64 64-64h67.8L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3z"
+              />
             </svg>
+            <input
+              type="range"
+              id="volumeControl"
+              class="slider absolute"
+              min="0"
+              max="100"
+              step="1"
+            />
           </div>
 
           <div
@@ -80,13 +94,13 @@
             <svg
               width="1em"
               height="1em"
-              viewBox="0 0 20 20"
+              fill="#fff"
               class="w-10 h-10 p-2 rounded-full text-white"
+              viewBox="0 0 512 512"
             >
               <path
-                fill="currentColor"
-                d="m4 10l9 9l1.4-1.5L7 10l7.4-7.5L13 1z"
-              ></path>
+                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"
+              />
             </svg>
           </div>
 
@@ -119,13 +133,13 @@
             <svg
               width="1em"
               height="1em"
-              viewBox="0 0 20 20"
+              fill="#fff"
               class="w-10 h-10 p-2 rounded-full text-white"
+              viewBox="0 0 512 512"
             >
               <path
-                fill="currentColor"
-                d="M7 1L5.6 2.5L13 10l-7.4 7.5L7 19l9-9z"
-              ></path>
+                d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"
+              />
             </svg>
           </div>
           <div
@@ -133,10 +147,8 @@
             @click="toggleRandom"
           >
             <svg
-              width="1em"
-              height="1em"
               viewBox="0 0 24 24"
-              class="w-10 h-10 p-2 rounded-full text-white"
+              class="w-12 h-12 p-2 rounded-full text-white"
             >
               <path
                 v-if="isRandom"
@@ -169,7 +181,7 @@
             </svg>
           </div>
         </div>
-        <div>
+        <div class="mb-4">
           <div>
             <input
               id="progress"
@@ -201,7 +213,7 @@
           :key="p.id"
           :class="{
             playing: currentSongId === p.id,
-            'w-480px p-3 bg-red-500 rounded mb-1 cursor-pointer':
+            'w-480px p-3 bg-red-300 rounded-xl mb-1 cursor-pointer':
               currentSongId !== p.id,
           }"
         >
@@ -220,12 +232,21 @@
               />
             </div>
             <div class="flex-row gap-3">
-              <h1 class="text-lg font-sans">
+              <h1
+                class="text-xl font-sans"
+                :class="{
+                  red: currentSongId == p.id,
+                }"
+              >
                 {{ p.name }}
               </h1>
-              <span class="text-xs">{{
-                p.artist
-              }}</span>
+              <span
+                class="text-sm"
+                :class="{
+                  caret: currentSongId == p.id,
+                }"
+                >{{ p.artist }}</span
+              >
             </div>
             <div>
               <svg
@@ -250,8 +271,6 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-
-// definePageMeta({ layout: "list" });
 
 const hover = ref(false);
 const currentSongId = ref(null);
@@ -295,11 +314,9 @@ watch(currentSong, (newValue, oldValue) => {
   console.log(currentAudio, currentSong);
 });
 
-const showFirstPath = ref(true);
-
 let currentAudio = null;
 
-let durationRef = ref("");
+let currentVolume = 1;
 
 const currentTimePercentage = ref(0);
 
@@ -321,6 +338,16 @@ const playAudio = (
 
   fileDownloadUrl.value = audioFile;
   currentSongImage.value = songImage;
+
+  volumeControl.addEventListener("input", () => {
+    console.log(
+      "volume change",
+      volumeControl.value
+    );
+    const volume = volumeControl.value;
+
+    audio.volume = volume / 100;
+  });
 
   audio.play();
   currentAudio = audio;
@@ -350,7 +377,6 @@ const playNextAudio = () => {
       randomIndex = randomIntInRange(0, maxIndex);
     } while (randomIndex === currentSongIndex);
 
-    console.log("randomIndex: " + randomIndex);
     const randomSong = list.value[randomIndex];
     playAudio(
       randomSong.audioFile,
@@ -372,6 +398,7 @@ const playNextAudio = () => {
       currentSongId = nextAudio.id;
     } else {
       const firstAudio = list.value[0];
+
       playAudio(
         firstAudio.audioFile,
         firstAudio.name,
@@ -382,6 +409,15 @@ const playNextAudio = () => {
       currentSongId = firstAudio.id;
     }
   }
+};
+const playNewSong = (audioFile) => {
+  const newAudio = new Audio(audioFile);
+
+  if (volumeControl.value === "0") {
+    newAudio.volume = 0;
+  }
+  currentAudio = newAudio;
+  currentAudio.play();
 };
 
 const playPreviousAudio = () => {
@@ -491,6 +527,14 @@ const downloadSong = async () => {
 
 <style scoped>
 .rotate-infinite {
+  /* animation: rotateInfinite 5s linear infinite; */
+}
+
+.rotate-infinite {
+  animation: none;
+}
+
+.rotate {
   animation: rotateInfinite 5s linear infinite;
 }
 
@@ -508,6 +552,19 @@ const downloadSong = async () => {
   width: 100px;
 }
 
+#volumeControl {
+  display: none;
+  position: absolute;
+  top: -50px;
+  left: -30px;
+  rotate: -90deg;
+  width: 100px;
+}
+
+#volumeControlWrapper:hover #volumeControl {
+  display: block;
+}
+
 .scroll {
   overflow-y: auto;
   -ms-overflow-style: none;
@@ -523,6 +580,7 @@ const downloadSong = async () => {
   opacity: 0.7;
   transition: opacity 0.2s;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .volume-slider {
@@ -549,7 +607,7 @@ const downloadSong = async () => {
 
 .playing {
   padding: 0.75rem;
-  background-color: #ccc;
+  background-color: #cdc2fd;
   border-radius: 0.375rem;
   margin-bottom: 0.25rem;
   cursor: pointer;
@@ -557,5 +615,17 @@ const downloadSong = async () => {
 
 .active {
   fill: red;
+}
+
+.font-fm {
+  font-family: "Montserrat", sans-serif;
+}
+
+.red {
+  color: red;
+}
+
+.caret {
+  color: rgb(56, 32, 5);
 }
 </style>
