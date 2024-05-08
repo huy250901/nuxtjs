@@ -14,7 +14,7 @@
   />
 
   <div
-    class="flex justify-center items-center h-screen"
+    class="flex bg-gradient-to-br from-blue-300 via-green-400 to-purple-400 justify-center items-center h-screen"
   >
     <div
       class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-full w-1/3 flex justify-center items-center flex-col"
@@ -37,8 +37,9 @@
         </h3>
         <div class="flex">
           <img
+            ref="imgRef"
             id="img"
-            class="rotate-infinite rounded-full m-auto w-40 h-40 items-center"
+            class="rounded-full m-auto w-40 h-40 items-center"
             :src="currentSongImage"
             :class="{ rotate: isPlaying }"
           />
@@ -82,6 +83,12 @@
               class="text-white w-10 h-10 p-2 rounded-full"
             >
               <path
+                v-if="isLoop"
+                fill="red"
+                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8z"
+              ></path>
+              <path
+                v-else
                 fill="currentColor"
                 d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8z"
               ></path>
@@ -248,7 +255,9 @@
                 >{{ p.artist }}</span
               >
             </div>
-            <div>
+            <div
+              @click="() => console.log('more')"
+            >
               <svg
                 width="1em"
                 height="1em"
@@ -270,26 +279,76 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 
-const hover = ref(false);
 const currentSongId = ref(null);
 const currentSong = ref(null);
 const isPlaying = ref(false);
-const isRotating = ref(false);
 const isRandom = ref(false);
+const isLoop = ref(false);
+const imgRef = ref(null);
+
+onMounted(() => {
+  nextTick(() => {
+    const rotateRef = imgRef.value;
+    const imgAnimated = rotateRef.animate(
+      [{ transform: "rotate(360deg)" }],
+      {
+        duration: 10000,
+        iterations: Infinity,
+      }
+    );
+    imgAnimated.pause();
+  });
+});
+
+watch(isLoop, (newValue) => {
+  if (currentAudio) {
+    console.log(
+      "isLoop Changed to: " + currentAudio
+    );
+    currentAudio.loop = newValue;
+  }
+});
 
 const toggleAudio = () => {
-  if (currentAudio) {
-    if (currentAudio.paused) {
-      currentAudio.play();
-      isPlaying.value = true;
-    } else {
-      currentAudio.pause();
-      isPlaying.value = false;
-    }
+  if (!currentAudio) {
+    const firstAudio = list.value[0];
+    playAudio(
+      firstAudio.audioFile,
+      firstAudio.name,
+      0,
+      firstAudio.avatar,
+      firstAudio.id
+    );
+    imgAnimated.start();
+    isPlaying.value = true;
+    return;
+  }
+
+  if (currentAudio.paused) {
+    currentAudio.play();
+    isPlaying.value = true;
+  } else {
+    currentAudio.pause();
+    isPlaying.value = false;
   }
 };
+
+// const toggleAudio = () => {
+//   console.log("click");
+//   console.log("current Audio", currentAudio);
+//   if (currentAudio) {
+//     console.log("current", currentAudio);
+//     if (currentAudio.paused) {
+//       currentAudio.play();
+//       isPlaying.value = true;
+//     } else {
+//       currentAudio.pause();
+//       isPlaying.value = false;
+//     }
+//   }
+// };
 
 const randomIntInRange = (min, max) => {
   return (
@@ -300,6 +359,10 @@ const randomIntInRange = (min, max) => {
 
 const toggleRandom = () => {
   isRandom.value = !isRandom.value;
+};
+
+const restartAudio = () => {
+  isLoop.value = !isLoop.value;
 };
 
 const { data: list } = await useFetch(
@@ -316,9 +379,8 @@ watch(currentSong, (newValue, oldValue) => {
 
 let currentAudio = null;
 
-let currentVolume = 1;
-
 const currentTimePercentage = ref(0);
+let currentVolume = 1;
 
 const fileDownloadUrl = ref(null);
 const playAudio = (
@@ -344,11 +406,31 @@ const playAudio = (
       "volume change",
       volumeControl.value
     );
-    const volume = volumeControl.value;
 
-    audio.volume = volume / 100;
+    currentVolume = volumeControl.value / 100; // Cập nhật giá trị volume
+    audio.volume = currentVolume;
   });
 
+  watch(
+    () => currentVolume,
+    (newValue) => {
+      if (currentAudio) {
+        console.log(
+          "value volume change",
+          currentVolume
+        );
+        currentAudio.volume = newValue;
+      }
+    }
+  );
+
+  if (isLoop.value) {
+    console.log("lap");
+    audio.play();
+    audio.loop = true;
+    isPlaying.value = true;
+  }
+  audio.volume = currentVolume;
   audio.play();
   currentAudio = audio;
   isPlaying.value = true;
@@ -356,6 +438,7 @@ const playAudio = (
   audio.addEventListener("ended", () => {
     playNextAudio();
   });
+
   audio.addEventListener("timeupdate", () => {
     const currentTime = audio.currentTime;
     const percentage =
@@ -410,15 +493,6 @@ const playNextAudio = () => {
     }
   }
 };
-const playNewSong = (audioFile) => {
-  const newAudio = new Audio(audioFile);
-
-  if (volumeControl.value === "0") {
-    newAudio.volume = 0;
-  }
-  currentAudio = newAudio;
-  currentAudio.play();
-};
 
 const playPreviousAudio = () => {
   const currentIndex = getCurrentSongIndex();
@@ -433,7 +507,6 @@ const playPreviousAudio = () => {
       randomIndex = randomIntInRange(0, maxIndex);
     } while (randomIndex === currentSongIndex);
 
-    console.log("randomIndex: " + randomIndex);
     const randomSong = list.value[randomIndex];
     playAudio(
       randomSong.audioFile,
@@ -493,14 +566,6 @@ const getCurrentSongIndex = () => {
   return 0;
 };
 
-const restartAudio = () => {
-  if (currentAudio) {
-    currentAudio.currentTime = 0;
-    currentAudio.play();
-    isPlaying.value = true;
-  }
-};
-
 const downloadSong = async () => {
   try {
     const response = await fetch(
@@ -526,15 +591,7 @@ const downloadSong = async () => {
 </script>
 
 <style scoped>
-.rotate-infinite {
-  /* animation: rotateInfinite 5s linear infinite; */
-}
-
-.rotate-infinite {
-  animation: none;
-}
-
-.rotate {
+/* .rotate {
   animation: rotateInfinite 5s linear infinite;
 }
 
@@ -545,12 +602,7 @@ const downloadSong = async () => {
   to {
     transform: rotate(360deg);
   }
-}
-.containerr {
-  background-color: green;
-  height: 100px;
-  width: 100px;
-}
+} */
 
 #volumeControl {
   display: none;

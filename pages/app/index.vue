@@ -9,12 +9,6 @@
       </div>
     </div>
   </div>
-  <!-- <router-link to="/"
-    >Go to Home Page</router-link
-  >
-  <router-link to="/about"
-    >Go to About Page</router-link
-  > -->
 </template>
 <script setup>
 definePageMeta({ layout: "products" });
