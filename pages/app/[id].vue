@@ -17,51 +17,45 @@
     class="flex bg-gradient-to-br from-blue-300 via-green-400 to-purple-400 justify-center items-center h-screen"
   >
     <div
-      class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-full w-1/3 flex justify-center items-center flex-col"
+      class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-[90%] rounded-2xl w-1/3 flex justify-center items-center flex-col"
     >
-      <div class="h-3/4 w-full border-2 px-4">
+      <div class="h-auto w-full px-4">
         <h2
-          class="text-center font-fm text-blue-700 font-bold mt-4 mb-4"
+          class="text-center font-fm text-blue-700 font-bold my-2"
         >
           Now Playing
         </h2>
 
         <h3
-          class="text-center font-fm text-blue-700 font-bold mb-4"
+          class="text-center font-fm text-blue-700 font-bold mb-2"
         >
           {{
             currentSong
-              ? `Đang phát: ${currentSong}`
+              ? `${currentSong}`
               : "Không có bài nào đang phát"
           }}
         </h3>
-        <div class="flex">
+        <div
+          ref="cdElement"
+          class="flex w-52 m-auto"
+        >
           <img
             ref="imgRef"
             id="img"
-            class="rounded-full m-auto w-40 h-40 items-center"
+            class="rounded-full m-auto"
             :src="currentSongImage"
             :class="{ rotate: isPlaying }"
           />
         </div>
+
         <div
-          class="flex justify-between mt-6 items-center"
+          class="flex justify-between mt-6 items-center mb-4"
         >
           <div
             class="relative cursor-pointer"
             id="volumeControlWrapper"
           >
-            <svg
-              width="1.4rem"
-              height="1.4rem"
-              fill="#fff"
-              class="p-2 rounded-full text-white w-10 h-10"
-              viewBox="0 0 640 512"
-            >
-              <path
-                d="M533.6 32.5C598.5 85.2 640 165.8 640 256s-41.5 170.7-106.4 223.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C557.5 398.2 592 331.2 592 256s-34.5-142.2-88.7-186.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM473.1 107c43.2 35.2 70.9 88.9 70.9 149s-27.7 113.8-70.9 149c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C475.3 341.3 496 301.1 496 256s-20.7-85.3-53.2-111.8c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zm-60.5 74.5C434.1 199.1 448 225.9 448 256s-13.9 56.9-35.4 74.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C393.1 284.4 400 271 400 256s-6.9-28.4-17.7-37.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM301.1 34.8C312.6 40 320 51.4 320 64V448c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352H64c-35.3 0-64-28.7-64-64V224c0-35.3 28.7-64 64-64h67.8L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3z"
-              />
-            </svg>
+            <IcVolume />
             <input
               type="range"
               id="volumeControl"
@@ -76,100 +70,52 @@
             class="cursor-pointer"
             @click="restartAudio"
           >
-            <svg
-              width="1em"
-              height="1em"
-              viewBox="0 0 24 24"
-              class="text-white w-10 h-10 p-2 rounded-full"
-            >
-              <path
-                v-if="isLoop"
-                fill="red"
-                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8z"
-              ></path>
-              <path
-                v-else
-                fill="currentColor"
-                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8z"
-              ></path>
-            </svg>
+            <IcRe :isLoop="isLoop" />
           </div>
           <div
             @click="playPreviousAudio"
             class="cursor-pointer"
           >
-            <svg
-              width="1em"
-              height="1em"
-              fill="#fff"
-              class="w-10 h-10 p-2 rounded-full text-white"
-              viewBox="0 0 512 512"
-            >
-              <path
-                d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"
-              />
-            </svg>
+            <IcPrev />
           </div>
 
           <div
             @click="toggleAudio"
             class="cursor-pointer"
           >
-            <svg
-              fill="#fff"
-              width="2em"
-              height="2em"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 320 512"
+            <div
+              class="rounded-full bg-gradient-to-br from-purple-400 to-pink-500 w-10 h-10 p-2 flex items-center justify-center"
             >
-              <path
-                v-if="isPlaying"
-                d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"
-              />
-              <path
-                v-else
-                d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
-              />
-            </svg>
+              <svg
+                fill="#fff"
+                width="1.6em"
+                height="1.6em"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+              >
+                <path
+                  v-if="isPlaying"
+                  d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"
+                />
+                <path
+                  v-else
+                  d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
+                />
+              </svg>
+            </div>
           </div>
 
           <div
             @click="playNextAudio"
             class="cursor-pointer"
           >
-            <svg
-              width="1em"
-              height="1em"
-              fill="#fff"
-              class="w-10 h-10 p-2 rounded-full text-white"
-              viewBox="0 0 512 512"
-            >
-              <path
-                d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"
-              />
-            </svg>
+            <IcNext />
           </div>
           <div
             class="cursor-pointer"
             @click="toggleRandom"
           >
-            <svg
-              viewBox="0 0 24 24"
-              class="w-12 h-12 p-2 rounded-full text-white"
-            >
-              <path
-                v-if="isRandom"
-                fill="red"
-                fillRule="evenodd"
-                d="M4 17a1 1 0 0 1 0-2h2l3-3l-3-3H4a1.001 1.001 0 0 1 0-2h3l4 4l4-4h2V5l4 3.001L17 11V9h-1l-3 3l3 3h1v-2l4 3l-4 3v-2h-2l-4-4l-4 4H4Z"
-              ></path>
-              <path
-                v-else
-                fill="currentColor"
-                fillRule="evenodd"
-                d="M4 17a1 1 0 0 1 0-2h2l3-3l-3-3H4a1.001 1.001 0 0 1 0-2h3l4 4l4-4h2V5l4 3.001L17 11V9h-1l-3 3l3 3h1v-2l4 3l-4 3v-2h-2l-4-4l-4 4H4Z"
-              ></path>
-            </svg>
+            <IcRandom :isRandom="isRandom" />
           </div>
           <div
             class="cursor-pointer"
@@ -181,8 +127,52 @@
               viewBox="0 0 24 24"
               class="w-10 h-10 p-2 rounded-full text-white"
             >
+              <defs>
+                <linearGradient
+                  id="grad4"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style="
+                      stop-color: rgb(
+                        255,
+                        205,
+                        227
+                      );
+                      stop-opacity: 1;
+                    "
+                  />
+                  <stop
+                    offset="54%"
+                    style="
+                      stop-color: rgb(
+                        255,
+                        180,
+                        248
+                      );
+                      stop-opacity: 1;
+                    "
+                  />
+                  <stop
+                    offset="100%"
+                    style="
+                      stop-color: rgb(
+                        237,
+                        127,
+                        245
+                      );
+                      stop-opacity: 1;
+                    "
+                  />
+                </linearGradient>
+              </defs>
+
               <path
-                fill="currentColor"
+                fill="url(#grad4)"
                 d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7l7-7z"
               ></path>
             </svg>
@@ -190,21 +180,40 @@
         </div>
         <div class="mb-4">
           <div>
-            <input
-              id="progress"
-              type="range"
-              class="slider"
-              v-model="currentTimePercentage"
-              step="1"
-              min="0"
-              max="100"
-              @click="seekAudio"
-            />
+            <div class="relative h-1 bg-white">
+              <div
+                class="absolute top-0 left-0 h-full bg-purple-500"
+                :style="{
+                  width:
+                    currentTimePercentage + '%',
+                }"
+              ></div>
+
+              <input
+                id="progress"
+                type="range"
+                class="absolute appearance-none w-full h-1 bg-transparent outline-none cursor-pointer focus:outline-none focus:ring-coral focus:border-coral"
+                v-model="currentTimePercentage"
+                step="1"
+                min="0"
+                max="100"
+                @click="seekAudio"
+              />
+            </div>
+          </div>
+          <div class="flex justify-between mt-4">
+            <p class="text-blue-200">
+              {{ formatTime(currentTime) }}
+            </p>
+            <p class="text-blue-200">
+              {{ formatTime(totalTime) }}
+            </p>
           </div>
         </div>
       </div>
       <div
-        class="scroll h-full w-full border-2 p-2"
+        ref="scrollElement"
+        class="scroll h-full w-full p-2"
       >
         <div
           @click="
@@ -216,20 +225,22 @@
               p.id
             )
           "
+          ref="songItems"
           v-for="p in list"
           :key="p.id"
           :class="{
             playing: currentSongId === p.id,
-            'w-480px p-3 bg-red-300 rounded-xl mb-1 cursor-pointer':
+            'w-480px h-20 p-3 bg-red-300 rounded-xl mb-1 cursor-pointer':
               currentSongId !== p.id,
           }"
+          class="min-h-20 flex"
         >
           <audio
             ref="audioPlayer"
             :src="p.audioFile"
           ></audio>
           <div
-            class="flex items-center w-full justify-between"
+            class="flex items-center w-full justify-between gap-6"
           >
             <div>
               <img
@@ -238,22 +249,27 @@
                 class="rounded-full w-12 h-12 items-center"
               />
             </div>
-            <div class="flex-row gap-3">
+            <div class="flex flex-col flex-1">
               <h1
-                class="text-xl font-sans"
+                class="text-xl font-sans overflow-hidden whitespace-nowrap inline-block max-w-56 truncate ..."
                 :class="{
                   red: currentSongId == p.id,
                 }"
+                style="
+                  margin-block-start: 0;
+                  margin-block-end: 0;
+                "
               >
                 {{ p.name }}
               </h1>
               <span
-                class="text-sm"
+                class="text-sm overflow-hidden whitespace-nowrap inline-block max-w-48 truncate ..."
                 :class="{
                   caret: currentSongId == p.id,
                 }"
-                >{{ p.artist }}</span
               >
+                {{ p.artist }}
+              </span>
             </div>
             <div
               @click="() => console.log('more')"
@@ -280,6 +296,11 @@
 </template>
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
+import IcNext from "../../assets/icons/ic_Next.vue";
+import IcRandom from "../../assets/icons/ic_Random.vue";
+import IcPrev from "../../assets/icons/ic_Prev.vue";
+import IcRe from "../../assets/icons/ic_Re.vue";
+import IcVolume from "../../assets/icons/ic_Volume.vue";
 
 const currentSongId = ref(null);
 const currentSong = ref(null);
@@ -287,11 +308,80 @@ const isPlaying = ref(false);
 const isRandom = ref(false);
 const isLoop = ref(false);
 const imgRef = ref(null);
+const cdElement = ref(null);
+const scrollElement = ref(null);
+const playingSong = ref(null);
+
+let imgAnimated = null;
+
+const currentTime = ref(0);
+const totalTime = ref(0);
+let initialCdWidth = 0;
+
+const { data: list } = await useFetch(
+  "https://663887544253a866a24e1d48.mockapi.io/list"
+);
+
+const currentSongImage = ref(
+  "https://photo-resize-zmp3.zmdcdn.me/w600_r1x1_jpeg/cover/e/d/2/5/ed251cf560be4747e7737b535c357f07.jpg"
+);
+
+const getPlayingElement = () => {
+  nextTick(() => {
+    const playingElement =
+      document.querySelector(".playing");
+    console.log(
+      "Playing Element:",
+      playingElement
+    );
+
+    setTimeout(() => {
+      playingElement.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }, 200);
+  });
+};
+
+watch(
+  () => currentSongId.value,
+  () => {
+    getPlayingElement();
+  }
+);
+
+onMounted(() => {
+  initialCdWidth = cdElement.value.offsetWidth;
+
+  scrollElement.value.addEventListener(
+    "scroll",
+    () => {
+      const scrollTop =
+        scrollElement.value.scrollTop;
+      const cdWidth = cdElement.value.offsetWidth;
+      let newCdWidth = initialCdWidth - scrollTop;
+
+      cdElement.value.style.width =
+        newCdWidth > 0 ? newCdWidth + "px" : 0;
+    }
+  );
+});
+
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(
+    seconds % 60
+  );
+  return `${minutes}:${remainingSeconds
+    .toString()
+    .padStart(2, "0")}`;
+};
 
 onMounted(() => {
   nextTick(() => {
     const rotateRef = imgRef.value;
-    const imgAnimated = rotateRef.animate(
+    imgAnimated = rotateRef.animate(
       [{ transform: "rotate(360deg)" }],
       {
         duration: 10000,
@@ -304,9 +394,6 @@ onMounted(() => {
 
 watch(isLoop, (newValue) => {
   if (currentAudio) {
-    console.log(
-      "isLoop Changed to: " + currentAudio
-    );
     currentAudio.loop = newValue;
   }
 });
@@ -321,35 +408,22 @@ const toggleAudio = () => {
       firstAudio.avatar,
       firstAudio.id
     );
-    imgAnimated.start();
+
     isPlaying.value = true;
     return;
   }
 
   if (currentAudio.paused) {
+    imgAnimated.play();
+
     currentAudio.play();
     isPlaying.value = true;
   } else {
     currentAudio.pause();
     isPlaying.value = false;
+    imgAnimated.pause();
   }
 };
-
-// const toggleAudio = () => {
-//   console.log("click");
-//   console.log("current Audio", currentAudio);
-//   if (currentAudio) {
-//     console.log("current", currentAudio);
-//     if (currentAudio.paused) {
-//       currentAudio.play();
-//       isPlaying.value = true;
-//     } else {
-//       currentAudio.pause();
-//       isPlaying.value = false;
-//     }
-//   }
-// };
-
 const randomIntInRange = (min, max) => {
   return (
     Math.floor(Math.random() * (max - min + 1)) +
@@ -358,20 +432,13 @@ const randomIntInRange = (min, max) => {
 };
 
 const toggleRandom = () => {
+  console.log("Toggle random", isRandom);
   isRandom.value = !isRandom.value;
 };
 
 const restartAudio = () => {
   isLoop.value = !isLoop.value;
 };
-
-const { data: list } = await useFetch(
-  "https://663887544253a866a24e1d48.mockapi.io/list"
-);
-
-const currentSongImage = ref(
-  "https://thumbs.dreamstime.com/z/error-page-not-found-vector-vinyl-music-broken-graphic-error-page-not-found-vector-vinyl-music-broken-graphic-background-156624909.jpg"
-);
 
 watch(currentSong, (newValue, oldValue) => {
   console.log(currentAudio, currentSong);
@@ -402,12 +469,7 @@ const playAudio = (
   currentSongImage.value = songImage;
 
   volumeControl.addEventListener("input", () => {
-    console.log(
-      "volume change",
-      volumeControl.value
-    );
-
-    currentVolume = volumeControl.value / 100; // Cập nhật giá trị volume
+    currentVolume = volumeControl.value / 100;
     audio.volume = currentVolume;
   });
 
@@ -415,10 +477,6 @@ const playAudio = (
     () => currentVolume,
     (newValue) => {
       if (currentAudio) {
-        console.log(
-          "value volume change",
-          currentVolume
-        );
         currentAudio.volume = newValue;
       }
     }
@@ -432,6 +490,7 @@ const playAudio = (
   }
   audio.volume = currentVolume;
   audio.play();
+  imgAnimated.play();
   currentAudio = audio;
   isPlaying.value = true;
   currentSong.value = songName;
@@ -439,10 +498,15 @@ const playAudio = (
     playNextAudio();
   });
 
+  audio.addEventListener("loadedmetadata", () => {
+    totalTime.value = audio.duration;
+  });
+
   audio.addEventListener("timeupdate", () => {
-    const currentTime = audio.currentTime;
+    const currentTimeValue = audio.currentTime;
     const percentage =
-      (currentTime / audio.duration) * 100;
+      (currentTimeValue / audio.duration) * 100;
+    currentTime.value = currentTimeValue;
     currentTimePercentage.value = percentage;
   });
 };
@@ -591,19 +655,6 @@ const downloadSong = async () => {
 </script>
 
 <style scoped>
-/* .rotate {
-  animation: rotateInfinite 5s linear infinite;
-}
-
-@keyframes rotateInfinite {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
-
 #volumeControl {
   display: none;
   position: absolute;
@@ -624,37 +675,20 @@ const downloadSong = async () => {
 }
 
 .slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 7px;
-  background: #eadfdf;
-  outline: none;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.volume-slider {
-  -webkit-appearance: none;
   width: 100%;
   height: 5px;
-  background: #d3d3d3;
-  outline: none;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-  cursor: pointer;
-  border-radius: 5px;
+  border: none;
+  background: linear-gradient(
+    to right,
+    #00ff00 0%,
+    #00ff00 var(--percentage),
+    #d3d3d3 var(--percentage),
+    #d3d3d3 100%
+  );
 }
 
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 15px;
-  height: 15px;
-  background: #ffffff;
-  border-radius: 50%;
-  cursor: pointer;
+input[type="range"] {
+  accent-color: rgb(168, 85, 247);
 }
 
 .playing {
