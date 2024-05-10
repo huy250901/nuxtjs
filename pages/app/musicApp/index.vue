@@ -52,7 +52,7 @@
           class="flex justify-between mt-6 items-center mb-4"
         >
           <div
-            class="relative cursor-pointer"
+            class="relative cursor-pointer hover:opacity-80"
             id="volumeControlWrapper"
           >
             <IcVolume />
@@ -67,21 +67,21 @@
           </div>
 
           <div
-            class="cursor-pointer"
+            class="cursor-pointer hover:opacity-80"
             @click="restartAudio"
           >
             <IcRe :isLoop="isLoop" />
           </div>
           <div
             @click="playPreviousAudio"
-            class="cursor-pointer"
+            class="cursor-pointer hover:opacity-80"
           >
             <IcPrev />
           </div>
 
           <div
             @click="toggleAudio"
-            class="cursor-pointer"
+            class="cursor-pointer hover:opacity-80"
           >
             <div
               class="rounded-full bg-gradient-to-br from-purple-400 to-pink-500 w-10 h-10 p-2 flex items-center justify-center"
@@ -107,18 +107,18 @@
 
           <div
             @click="playNextAudio"
-            class="cursor-pointer"
+            class="cursor-pointer hover:opacity-80"
           >
             <IcNext />
           </div>
           <div
-            class="cursor-pointer"
+            class="cursor-pointer hover:opacity-80"
             @click="toggleRandom"
           >
             <IcRandom :isRandom="isRandom" />
           </div>
           <div
-            class="cursor-pointer"
+            class="cursor-pointer hover:opacity-80"
             @click="downloadSong"
           >
             <svg
