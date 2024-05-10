@@ -59,7 +59,7 @@
             <input
               type="range"
               id="volumeControl"
-              class="slider absolute"
+              class="slider cursor-pointer absolute"
               min="0"
               max="100"
               step="1"
