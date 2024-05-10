@@ -21,13 +21,13 @@
     >
       <div class="h-auto w-full px-4">
         <h2
-          class="text-center font-fm text-blue-700 font-bold my-2"
+          class="text-center font-fm text-black font-bold my-2"
         >
           Now Playing
         </h2>
 
         <h3
-          class="text-center font-fm text-blue-700 font-bold mb-2"
+          class="text-center font-fm text-black font-bold mb-2"
         >
           {{
             currentSong
@@ -296,11 +296,11 @@
 </template>
 <script setup>
 import { ref, onMounted, nextTick } from "vue";
-import IcNext from "../../assets/icons/ic_Next.vue";
-import IcRandom from "../../assets/icons/ic_Random.vue";
-import IcPrev from "../../assets/icons/ic_Prev.vue";
-import IcRe from "../../assets/icons/ic_Re.vue";
-import IcVolume from "../../assets/icons/ic_Volume.vue";
+import IcNext from "../../../assets/icons/ic_Next.vue";
+import IcRandom from "../../../assets/icons/ic_Random.vue";
+import IcPrev from "../../../assets/icons/ic_Prev.vue";
+import IcRe from "../../../assets/icons/ic_Re.vue";
+import IcVolume from "../../../assets/icons/ic_Volume.vue";
 
 const currentSongId = ref(null);
 const currentSong = ref(null);
@@ -359,7 +359,7 @@ onMounted(() => {
     () => {
       const scrollTop =
         scrollElement.value.scrollTop;
-      const cdWidth = cdElement.value.offsetWidth;
+      // const cdWidth = cdElement.value.offsetWidth;
       let newCdWidth = initialCdWidth - scrollTop;
 
       cdElement.value.style.width =

@@ -16,10 +16,15 @@ import { NuxtLink } from '../.nuxt/components';
       >Go to About Page</router-link
     >
     <router-link
-      class="link text-indigo-700"
-      to="/app/musicplayer"
-      >Go to Music App Player</router-link
+      class="link text-indigo-700 mr-6"
+      to="/app/musicApp"
+      >Go to Music Player</router-link
     >
+    <!-- <router-link
+      class="link text-indigo-700"
+      to="/app/dashBoard"
+      >Go to dash board</router-link
+    > -->
   </div>
   <header>
     <nav>
