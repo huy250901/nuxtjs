@@ -14,7 +14,7 @@
   />
 
   <div
-    class="flex bg-gradient-to-br from-blue-300 via-green-400 to-purple-400 justify-center items-center h-screen"
+    class="flex bg-slate-400 justify-center items-center h-screen"
   >
     <div
       class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-[90%] rounded-2xl w-1/3 flex justify-center items-center flex-col"
@@ -230,7 +230,7 @@
           :key="p.id"
           :class="{
             playing: currentSongId === p.id,
-            'w-480px h-20 p-3 bg-red-300 rounded-xl mb-1 cursor-pointer':
+            'w-480px h-20 p-3 bg-white rounded-xl mb-1 cursor-pointer transition duration-300 ease-linear hover:bg-red-400':
               currentSongId !== p.id,
           }"
           class="min-h-20 flex"
@@ -693,7 +693,7 @@ input[type="range"] {
 
 .playing {
   padding: 0.75rem;
-  background-color: #cdc2fd;
+  background-color: rgb(227, 102, 102);
   border-radius: 0.375rem;
   margin-bottom: 0.25rem;
   cursor: pointer;
@@ -708,10 +708,10 @@ input[type="range"] {
 }
 
 .red {
-  color: red;
+  color: white;
 }
 
 .caret {
-  color: rgb(56, 32, 5);
+  color: white;
 }
 </style>
