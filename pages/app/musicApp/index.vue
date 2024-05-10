@@ -17,7 +17,7 @@
     class="flex bg-slate-400 justify-center items-center h-screen"
   >
     <div
-      class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-[90%] rounded-2xl w-1/3 flex justify-center items-center flex-col"
+      class="bg-gradient-to-br from-orange-500 via-teal-500 to-purple-500 h-[90%] sm:w-[70%] md:w-1/2 lg:w-[45%] xl:w-[45%] rounded-2xl flex justify-center items-center flex-col"
     >
       <div class="h-auto w-full px-4">
         <h2
